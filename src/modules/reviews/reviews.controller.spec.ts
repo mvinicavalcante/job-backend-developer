@@ -16,7 +16,9 @@ describe('ReviewsController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(reviewsController.getReviews()).toBe('Hello World!');
+      expect(reviewsController.getReviews(1, 10, null, null)).toBe(
+        'Hello World!',
+      );
     });
   });
 });

@@ -5,15 +5,27 @@ export class Review {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   title: string;
 
   @Column({ nullable: false })
   notes: string;
 
-  @Column()
+  @Column('double')
   rating: number;
 
   @Column()
   released: Date;
+
+  @Column()
+  runtime: string;
+
+  @Column()
+  director: string;
+
+  @Column()
+  genre: string;
+
+  @Column()
+  actors: string;
 }
