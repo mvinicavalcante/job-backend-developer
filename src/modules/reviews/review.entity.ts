@@ -28,4 +28,16 @@ export class Review {
 
   @Column()
   actors: string;
+
+  constructor(review?: Partial<Review>) {
+    this.id = review?.id;
+    this.title = review?.title;
+    this.notes = review?.notes;
+    this.rating = review?.rating;
+    this.released = review?.released;
+    this.runtime = review?.runtime;
+    this.director = review?.director;
+    this.genre = review?.genre;
+    this.actors = review?.actors;
+  }
 }

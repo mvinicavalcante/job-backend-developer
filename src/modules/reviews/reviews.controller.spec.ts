@@ -1,24 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReviewsController } from './reviews.controller';
 import { ReviewsService } from './reviews.service';
+import { ApiOMDbHelper } from 'src/helpers/apiOMDb';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Review } from './review.entity';
 
 describe('ReviewsController', () => {
   let reviewsController: ReviewsController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
+      imports: [TypeOrmModule.forFeature([Review])],
       controllers: [ReviewsController],
-      providers: [ReviewsService],
+      providers: [ReviewsService, ApiOMDbHelper],
     }).compile();
 
     reviewsController = app.get<ReviewsController>(ReviewsController);
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(reviewsController.getReviews(1, 10, null, null)).toBe(
-        'Hello World!',
-      );
+    it('Should be define reviewsController', () => {
+      expect(reviewsController).toBeDefined();
     });
   });
 });

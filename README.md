@@ -16,7 +16,7 @@ Isso iniciará o servidor da API e estará pronto para aceitar solicitações.
 
 Para criar migrações para o banco de dados, execute o seguinte comando:
 
-typeorm migration:create ./src/migrations/NomeMigration
+npm run migration:create ./src/migrations/NomeMigration
 
 Substitua NomeMigration pelo nome desejado para a migração.
 
