@@ -12,6 +12,14 @@ npm run dev
 
 Isso iniciará o servidor da API e estará pronto para aceitar solicitações.
 
+### Rodar testes da API
+
+Para rodar os testes da API, execute o seguinte comando:
+
+npm run test
+
+Isso iniciará os testes da API.
+
 ### Criar migrações
 
 Para criar migrações para o banco de dados, execute o seguinte comando:
@@ -27,3 +35,4 @@ Para executar as migrações e configurar o banco de dados, execute o seguinte c
 npm run migration:run
 
 Este comando executará as migrações especificadas no arquivo de configuração do TypeORM.
+

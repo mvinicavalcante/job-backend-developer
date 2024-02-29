@@ -1,15 +1,15 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ApiOMDbHelper } from 'src/helpers/apiOMDb';
 import { Review } from './review.entity';
 import { Repository, Like, FindManyOptions, EntityManager } from 'typeorm';
+import { OmdbProvider } from '../omdb/omdb.provider';
 
 @Injectable()
 export class ReviewsService {
   constructor(
     @InjectRepository(Review)
     private reviewRepository: Repository<Review>,
-    private readonly apiOMDbHelper: ApiOMDbHelper,
+    private readonly omdbprovider: OmdbProvider,
     private readonly entityManager: EntityManager,
   ) {}
 
@@ -68,37 +68,41 @@ export class ReviewsService {
   }
 
   async createReview(data: Partial<Review>) {
-    const reviewExists = await this.reviewAlreadyExists(data.title);
+    try {
+      const reviewExists = await this.reviewAlreadyExists(data.title);
 
-    if (reviewExists) {
-      throw new HttpException('Review already exists', 403);
-    }
+      if (reviewExists) {
+        throw new HttpException('Review already exists', 403);
+      }
 
-    const moviesData = await this.apiOMDbHelper.searchMovies(data.title);
-    const movieData = this.getFirstMovieData(moviesData);
-    const imdbID = movieData.imdbID;
+      const moviesData = await this.omdbprovider.searchMovies(data.title);
+      const movieData = this.getFirstMovieData(moviesData);
+      const imdbID = movieData.imdbID;
 
-    if (!imdbID) {
-      throw new NotFoundException('IMDb ID not found for the given movie');
-    }
+      if (!imdbID) {
+        throw new NotFoundException('IMDb ID not found for the given movie');
+      }
 
-    const movieDetails = await this.apiOMDbHelper.getMovieByImdbID(imdbID);
+      const movieDetails = await this.omdbprovider.getMovieByImdbID(imdbID);
 
-    return this.entityManager.transaction(async (entityManager) => {
-      const review = entityManager.create(Review, {
-        ...data,
-        rating: movieDetails.imdbRating,
-        runtime: movieDetails.Runtime,
-        director: movieDetails.Director,
-        genre: movieDetails.Genre,
-        released: new Date(movieDetails.Released),
-        actors: movieDetails.Actors,
+      return this.entityManager.transaction(async (entityManager) => {
+        const review = entityManager.create(Review, {
+          ...data,
+          rating: movieDetails.imdbRating,
+          runtime: movieDetails.Runtime,
+          director: movieDetails.Director,
+          genre: movieDetails.Genre,
+          released: new Date(movieDetails.Released),
+          actors: movieDetails.Actors,
+        });
+
+        await entityManager.save(review);
+
+        return review;
       });
-
-      await entityManager.save(review);
-
-      return review;
-    });
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
   }
 
   private async reviewAlreadyExists(title: string) {
@@ -110,24 +114,28 @@ export class ReviewsService {
   }
 
   async updateReview(id: number, data: Partial<Review>) {
-    const review = await this.reviewRepository.findOne({ where: { id: id } });
+    try {
+      const review = await this.reviewRepository.findOne({ where: { id: id } });
 
-    if (!review) {
-      throw new NotFoundException('Review not found');
-    }
-
-    return this.entityManager.transaction(async (entityManager) => {
-      await entityManager.update(Review, { id }, data);
-
-      const updatedReview = await entityManager.findOne(Review, {
-        where: { id },
-      });
-
-      if (!updatedReview) {
-        throw new NotFoundException('Updated review not found');
+      if (!review) {
+        throw new NotFoundException('Review not found');
       }
 
-      return updatedReview;
-    });
+      return this.entityManager.transaction(async (entityManager) => {
+        await entityManager.update(Review, { id }, data);
+
+        const updatedReview = await entityManager.findOne(Review, {
+          where: { id },
+        });
+
+        if (!updatedReview) {
+          throw new NotFoundException('Updated review not found');
+        }
+
+        return updatedReview;
+      });
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
   }
 }

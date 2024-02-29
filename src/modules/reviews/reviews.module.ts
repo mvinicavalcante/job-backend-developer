@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
-import { ApiOMDbHelper } from 'src/helpers/apiOMDb';
 import { ReviewsController } from './reviews.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Review } from './review.entity';
+import { OmdbModule } from '../omdb/omdb.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Review])],
+  imports: [TypeOrmModule.forFeature([Review]), OmdbModule],
   controllers: [ReviewsController],
-  providers: [ReviewsService, ApiOMDbHelper],
+  providers: [ReviewsService],
 })
 export class ReviewsModule {}

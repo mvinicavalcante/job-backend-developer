@@ -11,22 +11,22 @@ export class Review {
   @Column({ nullable: false })
   notes: string;
 
-  @Column('double')
+  @Column('double', { default: 0 })
   rating: number;
 
-  @Column()
+  @Column({ default: null })
   released: Date;
 
-  @Column()
+  @Column({ default: null })
   runtime: string;
 
-  @Column()
+  @Column({ nullable: false })
   director: string;
 
-  @Column()
+  @Column({ nullable: false })
   genre: string;
 
-  @Column()
+  @Column({ nullable: false })
   actors: string;
 
   constructor(review?: Partial<Review>) {

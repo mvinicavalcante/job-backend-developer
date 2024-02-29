@@ -1,15 +1,15 @@
 import axios, { AxiosInstance } from 'axios';
 
-export class ApiOMDbHelper {
+export class OmdbProvider {
   private static readonly BASE_URL = 'http://www.omdbapi.com/';
   private static readonly API_KEY = 'aa9290ba';
   private readonly axiosInstance: AxiosInstance;
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: ApiOMDbHelper.BASE_URL,
+      baseURL: OmdbProvider.BASE_URL,
       params: {
-        apikey: ApiOMDbHelper.API_KEY,
+        apikey: OmdbProvider.API_KEY,
       },
     });
   }
