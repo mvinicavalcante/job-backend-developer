@@ -53,4 +53,16 @@ export class ReviewsService {
 
     return review;
   }
+
+  async deleteReview(id: number) {
+    const review = await this.reviewRepository.findOne({
+      where: { id },
+    });
+
+    if (!review) {
+      throw new NotFoundException('Review not found');
+    }
+
+    await this.reviewRepository.delete(id);
+  }
 }

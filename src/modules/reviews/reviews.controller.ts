@@ -1,4 +1,12 @@
-import { Controller, Delete, Get, Param, Put, Query } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 
 @Controller('movie-reviews')
@@ -20,9 +28,14 @@ export class ReviewsController {
     return await this.reviewsService.getReview(id);
   }
 
+  @Post()
+  async createReview() {}
+
   @Put(':id')
   async updateReview() {}
 
   @Delete(':id')
-  async deleteReview() {}
+  async deleteReview(@Param('id') id: number) {
+    await this.reviewsService.deleteReview(id);
+  }
 }
