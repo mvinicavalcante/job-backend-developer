@@ -1,9 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
 
-@Controller('')
+@Controller('movie-reviews')
 export class ReviewsController {
   constructor() {}
 
-  @Get('/movie-reviews')
+  @Get()
   async getReviews() {}
+
+  @Post()
+  async createReview() {}
+
+  @Get(':id')
+  async getReview() {}
+
+  @Put(':id')
+  async updateReview() {}
+
+  @Delete(':id')
+  async deleteReview() {}
 }

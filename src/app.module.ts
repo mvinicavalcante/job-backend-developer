@@ -1,20 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeORMConfig } from './db/mysql.config';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'Vinicius2014!',
-      database: 'dolado',
-      entities: [],
-      synchronize: true,
-    }),
-    ReviewsModule,
-  ],
+  imports: [TypeOrmModule.forRoot(TypeORMConfig), ReviewsModule],
 })
 export class AppModule {}
