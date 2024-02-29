@@ -108,4 +108,26 @@ export class ReviewsService {
   private getFirstMovieData(data: any) {
     return data.Search[0];
   }
+
+  async updateReview(id: number, data: Partial<Review>) {
+    const review = await this.reviewRepository.findOne({ where: { id: id } });
+
+    if (!review) {
+      throw new NotFoundException('Review not found');
+    }
+
+    return this.entityManager.transaction(async (entityManager) => {
+      await entityManager.update(Review, { id }, data);
+
+      const updatedReview = await entityManager.findOne(Review, {
+        where: { id },
+      });
+
+      if (!updatedReview) {
+        throw new NotFoundException('Updated review not found');
+      }
+
+      return updatedReview;
+    });
+  }
 }

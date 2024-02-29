@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
-import { CreateReviewDto } from './reviews.dto';
+import { CreateReviewDto, UpdateReviewDto } from './reviews.dto';
 
 @Controller('movie-reviews')
 export class ReviewsController {
@@ -36,7 +36,9 @@ export class ReviewsController {
   }
 
   @Put(':id')
-  async updateReview() {}
+  async updateReview(@Param('id') id: number, @Body() body: UpdateReviewDto) {
+    return await this.reviewsService.updateReview(id, body);
+  }
 
   @Delete(':id')
   async deleteReview(@Param('id') id: number) {

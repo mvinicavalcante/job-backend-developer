@@ -9,3 +9,9 @@ export class CreateReviewDto {
   @IsNotEmpty()
   notes: string;
 }
+
+export class UpdateReviewDto {
+  @IsString()
+  @IsNotEmpty()
+  notes: string;
+}
