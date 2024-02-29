@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -8,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
+import { CreateReviewDto } from './reviews.dto';
 
 @Controller('movie-reviews')
 export class ReviewsController {
@@ -29,7 +31,9 @@ export class ReviewsController {
   }
 
   @Post()
-  async createReview() {}
+  async createReview(@Body() body: CreateReviewDto) {
+    return await this.reviewsService.createReview(body);
+  }
 
   @Put(':id')
   async updateReview() {}
