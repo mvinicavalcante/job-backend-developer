@@ -1,16 +1,14 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Review } from './review.entity';
-import { Repository, Like, FindManyOptions, EntityManager } from 'typeorm';
+import { Like, FindManyOptions } from 'typeorm';
 import { OmdbProvider } from '../omdb/omdb.provider';
+import { ReviewRepository } from './review.repository';
 
 @Injectable()
 export class ReviewsService {
   constructor(
-    @InjectRepository(Review)
-    private reviewRepository: Repository<Review>,
+    private readonly reviewRepository: ReviewRepository,
     private readonly omdbprovider: OmdbProvider,
-    private readonly entityManager: EntityManager,
   ) {}
 
   async getReviews(page = 1, limit = 10, order: string, filter: string) {
@@ -44,9 +42,7 @@ export class ReviewsService {
   }
 
   async getReview(id: number) {
-    const review = await this.reviewRepository.findOne({
-      where: { id },
-    });
+    const review = await this.reviewRepository.findOne(id);
 
     if (!review) {
       throw new NotFoundException('Review not found');
@@ -56,9 +52,7 @@ export class ReviewsService {
   }
 
   async deleteReview(id: number) {
-    const review = await this.reviewRepository.findOne({
-      where: { id },
-    });
+    const review = await this.reviewRepository.findOne(id);
 
     if (!review) {
       throw new NotFoundException('Review not found');
@@ -69,15 +63,33 @@ export class ReviewsService {
 
   async createReview(data: Partial<Review>) {
     try {
-      const reviewExists = await this.reviewAlreadyExists(data.title);
+      const reviewExists = await this.reviewRepository.findOneByTitle(
+        data.title,
+      );
 
       if (reviewExists) {
         throw new HttpException('Review already exists', 403);
       }
 
       const moviesData = await this.omdbprovider.searchMovies(data.title);
-      const movieData = this.getFirstMovieData(moviesData);
-      const imdbID = movieData.imdbID;
+
+      if (!moviesData.Search) {
+        throw new NotFoundException('No movies found');
+      }
+
+      const exactMatch = this.findExactMatch(moviesData.Search, data.title);
+
+      if (!exactMatch && moviesData.Search.length > 0) {
+        const similarTitles = moviesData.Search.map(
+          (movie: any) => movie.Title,
+        );
+        throw new HttpException(
+          `Movie title not found. Similar titles: ${similarTitles.join(', ')}`,
+          404,
+        );
+      }
+
+      const imdbID = exactMatch.imdbID;
 
       if (!imdbID) {
         throw new NotFoundException('IMDb ID not found for the given movie');
@@ -85,55 +97,41 @@ export class ReviewsService {
 
       const movieDetails = await this.omdbprovider.getMovieByImdbID(imdbID);
 
-      return this.entityManager.transaction(async (entityManager) => {
-        const review = entityManager.create(Review, {
-          ...data,
-          rating: movieDetails.imdbRating,
-          runtime: movieDetails.Runtime,
-          director: movieDetails.Director,
-          genre: movieDetails.Genre,
-          released: new Date(movieDetails.Released),
-          actors: movieDetails.Actors,
-        });
+      if (!movieDetails) {
+        throw new NotFoundException('Movie details not found');
+      }
 
-        await entityManager.save(review);
-
-        return review;
+      return this.reviewRepository.create({
+        ...data,
+        rating: movieDetails.imdbRating,
+        runtime: movieDetails.Runtime,
+        director: movieDetails.Director,
+        genre: movieDetails.Genre,
+        released: new Date(movieDetails.Released),
+        actors: movieDetails.Actors,
       });
     } catch (error) {
-      throw new HttpException(error.message, 500);
+      throw new HttpException(error.message, error.status || 500);
     }
   }
 
-  private async reviewAlreadyExists(title: string) {
-    return await this.reviewRepository.findOne({ where: { title } });
-  }
-
-  private getFirstMovieData(data: any) {
-    return data.Search[0];
+  private findExactMatch(movies: any[], title: string) {
+    return movies.find(
+      (movie: any) => movie.Title.toLowerCase() === title.toLowerCase(),
+    );
   }
 
   async updateReview(id: number, data: Partial<Review>) {
     try {
-      const review = await this.reviewRepository.findOne({ where: { id: id } });
+      const review = await this.reviewRepository.findOne(id);
 
       if (!review) {
         throw new NotFoundException('Review not found');
       }
 
-      return this.entityManager.transaction(async (entityManager) => {
-        await entityManager.update(Review, { id }, data);
+      await this.reviewRepository.update(id, data.notes);
 
-        const updatedReview = await entityManager.findOne(Review, {
-          where: { id },
-        });
-
-        if (!updatedReview) {
-          throw new NotFoundException('Updated review not found');
-        }
-
-        return updatedReview;
-      });
+      return await this.reviewRepository.findOne(id);
     } catch (error) {
       throw new HttpException(error.message, 500);
     }

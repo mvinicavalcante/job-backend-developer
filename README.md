@@ -36,3 +36,6 @@ npm run migration:run
 
 Este comando executará as migrações especificadas no arquivo de configuração do TypeORM.
 
+### Rodar container Docker
+
+docker-compose up --build

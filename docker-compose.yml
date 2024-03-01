@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: dolado
+    ports:
+      - "80:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: host.docker.internal:host-gateway
+      DB_PORT: 3306
+      DB_NAME: dolado
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD}
+    env_file:
+      - .env.production
