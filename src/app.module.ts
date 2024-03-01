@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { TypeORMConfig } from './db/mysql.config';
 import { TypeOrmExModule } from './db/typeorm-ex.module';
-import { ReviewRepository } from './modules/reviews/review.repository';
+import { ReviewRepository } from './modules/reviews/repositories/review.repository';
 
 @Module({
   imports: [
@@ -12,8 +12,8 @@ import { ReviewRepository } from './modules/reviews/review.repository';
       isGlobal: true,
       envFilePath: ['.env', '.env.development'],
     }),
-    TypeOrmExModule.forCustomRepository([ReviewRepository]),
     TypeOrmModule.forRoot(TypeORMConfig),
+    TypeOrmExModule.forCustomRepository([ReviewRepository]),
     ReviewsModule,
   ],
 })

@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ReviewsController } from './reviews.controller';
 import { ReviewsService } from './reviews.service';
 import { OmdbModule } from '../omdb/omdb.module';
-import { Review } from './review.entity';
+import { Review } from './entities/review.entity';
 
 describe('ReviewsController', () => {
   let reviewsController: ReviewsController;
@@ -36,10 +36,7 @@ describe('ReviewsController', () => {
 
   describe('getReviews', () => {
     it('Should be return an array of reviews', async () => {
-      const result = {
-        reviews: [],
-        total: 0,
-      };
+      const result = { reviews: [], total: 0 };
       jest
         .spyOn(reviewsController, 'getReviews')
         .mockImplementation(async () => result);

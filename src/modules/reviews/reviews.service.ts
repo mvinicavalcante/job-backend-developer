@@ -1,8 +1,8 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
-import { Review } from './review.entity';
+import { Review } from './entities/review.entity';
 import { Like, FindManyOptions } from 'typeorm';
 import { OmdbProvider } from '../omdb/omdb.provider';
-import { ReviewRepository } from './review.repository';
+import { ReviewRepository } from './repositories/review.repository';
 
 @Injectable()
 export class ReviewsService {
@@ -21,6 +21,8 @@ export class ReviewsService {
 
     if (order) {
       const [field, direction] = order.split(':');
+      if (!['id', 'title', 'rating', 'released'].includes(field))
+        throw new HttpException('Invalid field', 400);
       options.order[field] = direction.toUpperCase();
     }
 

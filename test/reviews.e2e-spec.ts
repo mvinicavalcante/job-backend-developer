@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { HttpStatus, INestApplication } from '@nestjs/common';
+import request from 'supertest';
+import { AppModule } from '../src/app.module';
 
-describe('AppController (e2e)', () => {
+describe('ReviewsController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -15,10 +15,10 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/movie-reviews (GET)', () => {
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+      .get('/movie-reviews')
+      .expect(HttpStatus.OK)
+      .expect('Content-Type', /json/);
   });
 });

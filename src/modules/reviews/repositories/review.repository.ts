@@ -1,14 +1,16 @@
 import { EntityManager, FindManyOptions } from 'typeorm';
-import { Review } from './review.entity';
-import { CustomRepository } from 'src/db/typeorm-ex.decorator';
+import { Review } from '../entities/review.entity';
+import { CustomRepository } from '../../../db/typeorm-ex.decorator';
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 
-@CustomRepository(Review)
 @Injectable()
+@CustomRepository(Review)
 export class ReviewRepository {
-  @InjectEntityManager()
-  private readonly entityManager: EntityManager;
+  constructor(
+    @InjectEntityManager()
+    private readonly entityManager: EntityManager,
+  ) {}
 
   async findOneByTitle(title: string): Promise<Review> {
     const queryBuilder = this.entityManager.createQueryBuilder(

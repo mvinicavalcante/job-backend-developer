@@ -9,7 +9,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
-import { CreateReviewDto, UpdateReviewDto } from './reviews.dto';
+import { CreateReviewDto } from './dtos/create-review.dto';
+import { UpdateReviewDto } from './dtos/update-review.dto';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('movie-reviews')
