@@ -17,11 +17,21 @@ npm i
 
 ### Iniciar a API
 
-Para iniciar a API, execute o seguinte comando:
+Para iniciar a API a partir do Docker: instruções do Docker no final do arquivo
+
+Para iniciar a API (sem Docker), execute o seguinte comando:
 
 npm run dev
 
 Isso iniciará o servidor da API e estará pronto para aceitar solicitações.
+
+### Para ver a documentação da API:
+
+localhost:SUA_PORTA/docs
+
+* Lembre-se que sua porta irá depender se está rodando no Docker ou não. 
+* Vale também citar que você pode modificar a porta na qual deseja que rode
+indo nos arquivos .env de cada ambiente (Dockerfile, docker-compose e .env.production caso rode no Docker)
 
 ### Rodar testes da API
 
