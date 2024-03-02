@@ -1,8 +1,9 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateReview1709175379131 implements MigrationInterface {
+export class CreateReview1709407171378 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(/* SQL */ `CREATE TABLE "review" (
+    await queryRunner.query(
+      `CREATE TABLE "review" (
             "id" int NOT NULL AUTO_INCREMENT,
             "title" varchar(255) NOT NULL,
             "notes" varchar(255) NOT NULL,
@@ -13,7 +14,8 @@ export class CreateReview1709175379131 implements MigrationInterface {
             "genre" varchar(200) NOT NULL,
             "actors" varchar(255) NOT NULL,
             PRIMARY KEY ("id")
-        ) ENGINE=InnoDB`);
+        ) ENGINE=InnoDB`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

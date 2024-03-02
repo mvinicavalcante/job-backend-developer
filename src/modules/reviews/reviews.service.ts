@@ -41,7 +41,7 @@ export class ReviewsService {
   }
 
   async getReview(id: number) {
-    const review = await this.reviewRepository.findOne(id);
+    const review = await this.reviewRepository.findOneReview(id);
 
     if (!review) {
       throw new NotFoundException('Review not found');
@@ -51,13 +51,13 @@ export class ReviewsService {
   }
 
   async deleteReview(id: number) {
-    const review = await this.reviewRepository.findOne(id);
+    const review = await this.reviewRepository.findOneReview(id);
 
     if (!review) {
       throw new NotFoundException('Review not found');
     }
 
-    await this.reviewRepository.delete(id);
+    await this.reviewRepository.deleteReview(id);
   }
 
   async createReview(data: Partial<Review>) {
@@ -103,7 +103,7 @@ export class ReviewsService {
         throw new NotFoundException('Movie details not found');
       }
 
-      return this.reviewRepository.create({
+      return this.reviewRepository.createReview({
         ...data,
         rating: movieDetails.imdbRating,
         runtime: movieDetails.Runtime,
@@ -125,7 +125,7 @@ export class ReviewsService {
 
   async updateReview(id: number, data: Partial<Review>) {
     try {
-      const review = await this.reviewRepository.findOne(id);
+      const review = await this.reviewRepository.findOneReview(id);
 
       if (!review) {
         throw new NotFoundException('Review not found');
@@ -184,7 +184,7 @@ export class ReviewsService {
 
       await this.reviewRepository.update(id, data);
 
-      return await this.reviewRepository.findOne(id);
+      return await this.reviewRepository.findOneReview(id);
     } catch (error) {
       throw new HttpException(error.message, 500);
     }
