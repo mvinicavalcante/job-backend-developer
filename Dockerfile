@@ -2,13 +2,15 @@ FROM node:18-alpine
 
 WORKDIR /usr/src/api
 
-COPY . .
-COPY ./.env.production ./.env
+COPY package*.json ./
+COPY .env.production .env
 
 RUN npm install --quiet --no-optional --no-fund --loglevel=error
 
+COPY . .
+
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 3300
 
 CMD [ "npm", "run", "start:prod" ]

@@ -10,7 +10,7 @@ import { ReviewRepository } from './modules/reviews/repositories/review.reposito
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', '.env.development'],
+      envFilePath: ['.env', '.env.production'],
     }),
     TypeOrmModule.forRoot(TypeORMConfig),
     TypeOrmExModule.forCustomRepository([ReviewRepository]),

@@ -50,4 +50,11 @@ Este comando executará as migrações especificadas no arquivo de configuraçã
 
 ### Rodar container Docker
 
-docker-compose up --build
+## Rodar imagem do BD
+docker compose up -d db
+
+## Buildar API
+docker compose build
+
+## Subir o container
+docker compose up

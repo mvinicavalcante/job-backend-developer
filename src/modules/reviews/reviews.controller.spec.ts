@@ -48,7 +48,7 @@ describe('ReviewsController', () => {
 
   describe('getReview', () => {
     it('Should be return a review', async () => {
-      const result = {} as Review; // Specify the type of result as Review
+      const result = {} as Review;
       jest
         .spyOn(reviewsController, 'getReview')
         .mockImplementation(async () => result);

@@ -8,7 +8,7 @@ import { ReviewRepository } from './repositories/review.repository';
 export class ReviewsService {
   constructor(
     private readonly reviewRepository: ReviewRepository,
-    private readonly omdbprovider: OmdbProvider,
+    private readonly omdbProvider: OmdbProvider,
   ) {}
 
   async getReviews(page = 1, limit = 10, order: string, filter: string) {
@@ -31,6 +31,7 @@ export class ReviewsService {
         { title: Like(`%${filter}%`) },
         { director: Like(`%${filter}%`) },
         { actors: Like(`%${filter}%`) },
+        { genre: Like(`%${filter}%`) },
       ];
     }
 
@@ -70,10 +71,13 @@ export class ReviewsService {
       );
 
       if (reviewExists) {
-        throw new HttpException('Review already exists', 403);
+        throw new HttpException(
+          `Review already exists with title "${reviewExists.title}" and id "${reviewExists.id}" `,
+          403,
+        );
       }
 
-      const moviesData = await this.omdbprovider.searchMovies(data.title);
+      const moviesData = await this.omdbProvider.searchMovies(data.title);
 
       if (!moviesData.Search) {
         throw new NotFoundException('No movies found');
@@ -81,7 +85,7 @@ export class ReviewsService {
 
       const exactMatch = this.findExactMatch(moviesData.Search, data.title);
 
-      if (!exactMatch && moviesData.Search.length > 0) {
+      if (!exactMatch) {
         const similarTitles = moviesData.Search.map(
           (movie: any) => movie.Title,
         );
@@ -97,7 +101,7 @@ export class ReviewsService {
         throw new NotFoundException('IMDb ID not found for the given movie');
       }
 
-      const movieDetails = await this.omdbprovider.getMovieByImdbID(imdbID);
+      const movieDetails = await this.omdbProvider.getMovieByImdbID(imdbID);
 
       if (!movieDetails) {
         throw new NotFoundException('Movie details not found');
