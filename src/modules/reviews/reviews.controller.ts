@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -41,7 +42,7 @@ export class ReviewsController {
     description: 'Get a review by its ID',
   })
   @Get(':id')
-  async getReview(@Param('id') id: number) {
+  async getReview(@Param('id', new ParseIntPipe()) id: number) {
     return await this.reviewsService.getReview(id);
   }
 
@@ -59,7 +60,10 @@ export class ReviewsController {
     description: 'Update a review by its ID',
   })
   @Put(':id')
-  async updateReview(@Param('id') id: number, @Body() body: UpdateReviewDto) {
+  async updateReview(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() body: UpdateReviewDto,
+  ) {
     return await this.reviewsService.updateReview(id, body);
   }
 
@@ -68,7 +72,7 @@ export class ReviewsController {
     description: 'Delete a review by its ID',
   })
   @Delete(':id')
-  async deleteReview(@Param('id') id: number) {
+  async deleteReview(@Param('id', new ParseIntPipe()) id: number) {
     await this.reviewsService.deleteReview(id);
   }
 }

@@ -37,10 +37,6 @@ export class ReviewsService {
 
     const [reviews, total] = await this.reviewRepository.findAndCount(options);
 
-    if (reviews.length === 0) {
-      throw new NotFoundException('No reviews found');
-    }
-
     return { reviews, total };
   }
 
@@ -135,7 +131,58 @@ export class ReviewsService {
         throw new NotFoundException('Review not found');
       }
 
-      await this.reviewRepository.update(id, data.notes);
+      if (data.title) {
+        const reviewExists = await this.reviewRepository.findOneByTitle(
+          data.title,
+        );
+
+        if (reviewExists && reviewExists.id !== id) {
+          throw new HttpException(
+            `Review already exists with title ${reviewExists.title} and id ${reviewExists.id}`,
+            403,
+          );
+        }
+
+        const moviesData = await this.omdbProvider.searchMovies(data.title);
+
+        if (!moviesData.Search) {
+          throw new NotFoundException('No movies found');
+        }
+
+        const exactMatch = this.findExactMatch(moviesData.Search, data.title);
+
+        if (!exactMatch) {
+          const similarTitles = moviesData.Search.map(
+            (movie: any) => movie.Title,
+          );
+          throw new HttpException(
+            `Movie title not found. Similar titles: ${similarTitles.join(', ')}`,
+            404,
+          );
+        }
+
+        const imdbID = exactMatch.imdbID;
+
+        if (!imdbID) {
+          throw new NotFoundException('IMDb ID not found for the given movie');
+        }
+
+        const movieDetails = await this.omdbProvider.getMovieByImdbID(imdbID);
+
+        if (!movieDetails) {
+          throw new NotFoundException('Movie details not found');
+        }
+
+        data.title = movieDetails.Title;
+        data.rating = movieDetails.imdbRating;
+        data.runtime = movieDetails.Runtime;
+        data.director = movieDetails.Director;
+        data.genre = movieDetails.Genre;
+        data.released = new Date(movieDetails.Released);
+        data.actors = movieDetails.Actors;
+      }
+
+      await this.reviewRepository.update(id, data);
 
       return await this.reviewRepository.findOne(id);
     } catch (error) {

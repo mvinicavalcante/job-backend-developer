@@ -81,7 +81,7 @@ export class ReviewRepository {
     return await this.entityManager.save(review);
   }
 
-  async update(id: number, notes: string): Promise<Review> {
+  async update(id: number, data: Partial<Review>): Promise<Review> {
     if (!this.entityManager) {
       throw new Error('EntityManager not initialized');
     }
@@ -92,7 +92,7 @@ export class ReviewRepository {
 
     await queryBuilder
       .update(Review)
-      .set({ notes })
+      .set(data)
       .where('review.id = :id', { id })
       .execute();
 
