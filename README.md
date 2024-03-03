@@ -60,6 +60,10 @@ Este comando executará as migrações especificadas no arquivo de configuraçã
 
 ### Rodar container Docker
 
+## Antes de rodar o Docker...
+
+* Certifique-se que as portas definidas estarão livres.
+
 ## Rodar imagem do BD
 docker compose up -d db
 

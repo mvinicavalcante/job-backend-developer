@@ -46,6 +46,19 @@ describe('ReviewsController', () => {
     });
   });
 
+  describe('getReviews', () => {
+    it('Should be return an error', async () => {
+      jest
+        .spyOn(reviewsController, 'getReviews')
+        .mockImplementation(async () => {
+          throw new Error();
+        });
+      expect(
+        reviewsController.getReviews(1, 10, 'id:asc', 'filter'),
+      ).rejects.toThrow();
+    });
+  });
+
   describe('getReview', () => {
     it('Should be return a review', async () => {
       const result = {} as Review;
@@ -53,6 +66,27 @@ describe('ReviewsController', () => {
         .spyOn(reviewsController, 'getReview')
         .mockImplementation(async () => result);
       expect(await reviewsController.getReview(1)).toBe(result);
+    });
+  });
+
+  describe('getReview', () => {
+    it('Should be return a review', async () => {
+      const result = {} as Review;
+      jest
+        .spyOn(reviewsController, 'getReview')
+        .mockImplementation(async () => result);
+      expect(await reviewsController.getReview(1)).toBe(result);
+    });
+  });
+
+  describe('getReview', () => {
+    it('Should be return an error', async () => {
+      jest
+        .spyOn(reviewsController, 'getReview')
+        .mockImplementation(async () => {
+          throw new Error();
+        });
+      expect(reviewsController.getReview(1)).rejects.toThrow();
     });
   });
 
@@ -71,50 +105,18 @@ describe('ReviewsController', () => {
     });
   });
 
-  describe('updateReview', () => {
+  describe('createReview', () => {
     it('Should be return a review', async () => {
       const result = {} as Review;
       jest
-        .spyOn(reviewsController, 'updateReview')
+        .spyOn(reviewsController, 'createReview')
         .mockImplementation(async () => result);
       expect(
-        await reviewsController.updateReview(1, {
-          notes: 'notes test updated',
+        await reviewsController.createReview({
+          title: 'title',
+          notes: 'notes test',
         }),
       ).toBe(result);
-    });
-  });
-
-  describe('deleteReview', () => {
-    it('Should be return undefined', async () => {
-      jest
-        .spyOn(reviewsController, 'deleteReview')
-        .mockImplementation(async () => undefined);
-      expect(await reviewsController.deleteReview(1)).toBeUndefined();
-    });
-  });
-
-  describe('getReviews', () => {
-    it('Should be return an error', async () => {
-      jest
-        .spyOn(reviewsController, 'getReviews')
-        .mockImplementation(async () => {
-          throw new Error();
-        });
-      expect(
-        reviewsController.getReviews(1, 10, 'id:asc', 'filter'),
-      ).rejects.toThrow();
-    });
-  });
-
-  describe('getReview', () => {
-    it('Should be return an error', async () => {
-      jest
-        .spyOn(reviewsController, 'getReview')
-        .mockImplementation(async () => {
-          throw new Error();
-        });
-      expect(reviewsController.getReview(1)).rejects.toThrow();
     });
   });
 
@@ -135,6 +137,20 @@ describe('ReviewsController', () => {
   });
 
   describe('updateReview', () => {
+    it('Should be return a review', async () => {
+      const result = {} as Review;
+      jest
+        .spyOn(reviewsController, 'updateReview')
+        .mockImplementation(async () => result);
+      expect(
+        await reviewsController.updateReview(1, {
+          notes: 'notes test updated',
+        }),
+      ).toBe(result);
+    });
+  });
+
+  describe('updateReview', () => {
     it('Should be return an error', async () => {
       jest
         .spyOn(reviewsController, 'updateReview')
@@ -146,6 +162,33 @@ describe('ReviewsController', () => {
           notes: 'notes test updated',
         }),
       ).rejects.toThrow();
+    });
+  });
+
+  describe('deleteReview', () => {
+    it('Should be return undefined', async () => {
+      jest
+        .spyOn(reviewsController, 'deleteReview')
+        .mockImplementation(async () => undefined);
+      expect(await reviewsController.deleteReview(1)).toBeUndefined();
+    });
+  });
+
+  describe('deleteReview', () => {
+    it('Should be return undefined', async () => {
+      jest
+        .spyOn(reviewsController, 'deleteReview')
+        .mockImplementation(async () => undefined);
+      expect(await reviewsController.deleteReview(1)).toBeUndefined();
+    });
+  });
+
+  describe('deleteReview', () => {
+    it('Should be return undefined', async () => {
+      jest
+        .spyOn(reviewsController, 'deleteReview')
+        .mockImplementation(async () => undefined);
+      expect(await reviewsController.deleteReview(1)).toBeUndefined();
     });
   });
 

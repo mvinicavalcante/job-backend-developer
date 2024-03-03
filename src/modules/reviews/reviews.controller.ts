@@ -42,7 +42,10 @@ export class ReviewsController {
     description: 'Get a review by its ID',
   })
   @Get(':id')
-  async getReview(@Param('id', new ParseIntPipe()) id: number) {
+  async getReview(
+    @Param('id', new ParseIntPipe())
+    id: number,
+  ) {
     return await this.reviewsService.getReview(id);
   }
 
