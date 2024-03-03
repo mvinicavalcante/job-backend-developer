@@ -16,7 +16,7 @@ export class ReviewRepository extends Repository<Review> {
       .getOne();
   }
 
-  async findAndCount(
+  async findAndCountReviews(
     options?: FindManyOptions<Review>,
   ): Promise<[Review[], number]> {
     if (!this.dataSource) {

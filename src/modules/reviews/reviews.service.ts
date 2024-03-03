@@ -35,7 +35,8 @@ export class ReviewsService {
       ];
     }
 
-    const [reviews, total] = await this.reviewRepository.findAndCount(options);
+    const [reviews, total] =
+      await this.reviewRepository.findAndCountReviews(options);
 
     return { reviews, total };
   }

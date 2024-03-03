@@ -1,5 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
+import { Review } from 'src/modules/reviews/entities/review.entity';
 dotenv.config();
 
 export const TypeORMConfig: TypeOrmModuleOptions = {
@@ -9,7 +10,7 @@ export const TypeORMConfig: TypeOrmModuleOptions = {
   database: process.env.DB_NAME,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  entities: ['dist/**/*.entity{.ts,.js}'],
+  entities: [Review],
   migrations: ['dist/src/migrations/*{.ts,.js}'],
   synchronize: true,
   migrationsRun: true,

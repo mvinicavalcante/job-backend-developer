@@ -5,10 +5,12 @@ const fieldsSwagger = {
   title: {
     type: 'string',
     example: 'The Shawshank Redemption',
+    validator: ['IsString', 'IsNotEmpty'],
   },
   notes: {
     type: 'string',
     example: 'This is a great movie',
+    validator: ['IsString', 'IsNotEmpty'],
   },
 };
 

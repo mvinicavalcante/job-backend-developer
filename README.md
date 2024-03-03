@@ -6,7 +6,7 @@ Este é um projeto de API desenvolvido utilizando o framework NestJS para o test
 
 * Desenvolvimento tranquilo com um framework no qual diariamente estou em contato. Raras exceções de algumas tecnologias que eu não possuía tanta familiaridade.
 * As principais decisões tomadas se resumem basicamente às validações de criação tendo em vista a variedade de resultados que a API externa utilizada traria. Ex.: Quando o usuário digitar o nome de um filme que não for exatamente igual, sugerir relacionados aquele título.
-* A estrutura do projeto conta com (src/): pasta config com a configuração para o Swagger; pasta db com configurações relacionadas ao banco de dados e TypeORM; pasta migrations para guardar as migrations; pasta modules com os módulos da aplicação (omdb e reviews) contendo seus services, controllers, repositories, dtos etc.
+* A estrutura do projeto conta com (src/): pasta config com a configuração para o Swagger; pasta db com configurações relacionadas ao banco de dados e TypeORM; pasta migrations para guardar as migrations; pasta modules com os módulos da aplicação (omdb e reviews) contendo seus services, controllers, repositories, dtos e arquivo(s) de teste.
 
 ## Como usar
 

@@ -10,6 +10,7 @@ const fieldsSwagger = {
   notes: {
     type: 'string',
     example: 'This is a great movie',
+    validator: ['IsString', 'IsNotEmpty'],
   },
 };
 
