@@ -1,4 +1,9 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Review } from './entities/review.entity';
 import { Like, FindManyOptions } from 'typeorm';
 import { OmdbProvider } from '../omdb/omdb.provider';
@@ -68,9 +73,8 @@ export class ReviewsService {
       );
 
       if (reviewExists) {
-        throw new HttpException(
+        throw new ConflictException(
           `Review already exists with title "${reviewExists.title}" and id "${reviewExists.id}" `,
-          403,
         );
       }
 
@@ -138,9 +142,8 @@ export class ReviewsService {
         );
 
         if (reviewExists && reviewExists.id !== id) {
-          throw new HttpException(
+          throw new ConflictException(
             `Review already exists with title ${reviewExists.title} and id ${reviewExists.id}`,
-            403,
           );
         }
 

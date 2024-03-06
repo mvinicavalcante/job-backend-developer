@@ -7,6 +7,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   createDocumentSwagger(app);
-  await app.listen(process.env.PORT || 3300);
+  await app.listen(
+    process.env.ENVIROMENT === 'development'
+      ? 3000
+      : process.env.PORT_PRODUCTION,
+  );
 }
 bootstrap();
