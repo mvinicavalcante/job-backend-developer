@@ -9,7 +9,7 @@ async function bootstrap() {
   createDocumentSwagger(app);
   await app.listen(
     process.env.ENVIROMENT === 'development'
-      ? 3000
+      ? process.env.PORT_LOCAL
       : process.env.PORT_PRODUCTION,
   );
 }
